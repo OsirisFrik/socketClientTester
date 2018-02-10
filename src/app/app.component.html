@@ -1,0 +1,22 @@
+<div class="col s12">
+  <a class="btn-floating btn-small right waves-effect waves-light red" id="addSocket" ng-click="newTab();">
+    <i class="material-icons">add</i>
+  </a>
+  <ul class="tabs grey darken-3" id="tabs-sockets">
+    <li class="tab col s3" *ngFor="let tab of tabsData; index as i; first as isFristTab">
+      <a href="#tab-{{i}}" [ngClass]="{'active':isFristTab}">
+        <span>{{tab.name || 'Socket ' + i}}</span>
+        &nbsp;
+        <i class='fa fa-edit'></i>
+      </a>
+    </li>
+  </ul>
+</div>
+<div id="tab-{{i}}" class="col s12" *ngFor="let tab of tabsData; index as i">
+  <div class="row" style="margin-left: auto; margin-right: auto">
+    <div class="input-field col s4">
+      <input id="ws-{{i}}" type="text" name="ws-{{i}}" [(ngModel)]="tab.ws">
+      <label for="ws-{{i}}">WS URL</label>
+    </div>
+  </div>
+</div>
