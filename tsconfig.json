@@ -1,5 +1,8 @@
 {
   "compileOnSave": false,
+  "exclude": [
+    "./src/assets/*"
+  ],
   "compilerOptions": {
     "outDir": "./dist",
     "sourceMap": true,

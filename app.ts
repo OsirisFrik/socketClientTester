@@ -26,7 +26,7 @@ function initApp() {
 function createWindow() {
   const iconName = process.platform === 'win32' ? 'icons/win/icon.icon' : 'icons/png/64x64.png'
   const iconPath = path.join(__dirname, iconName)
-  win = new BrowserWindow({ width: 1090, height: 800, icon: iconPath, darkTheme: false })
+  win = new BrowserWindow({ width: 1090, height: 800, icon: iconPath, darkTheme: true })
   setTimeout(function () {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),

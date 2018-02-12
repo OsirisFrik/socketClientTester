@@ -1,8 +1,68 @@
 /* You can add global styles to this file, and also import other style files */
-@import "https://fonts.googleapis.com/icon?family=Material+Icons";
 
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
 #addSocket {
   position: fixed !important;
   right: 3px;
   top: 3px;
+}
+
+.indicator {
+  background-color: #ea80fc !important;
+}
+
+.editor {
+  height: 275px;
+  border: 1px solid #DDD;
+  border-radius: 4px;
+  border-bottom-right-radius: 0;
+  margin-top: 5px;
+}
+
+.row {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* label color */
+
+.input-field label, input[type="text"] {
+  color: #eeeeee !important;
+}
+
+/* label focus color */
+
+.input-field input[type=text]:focus+label {
+  color: #eeeeee !important;
+}
+
+/* label underline focus color */
+
+.input-field input[type=text]:focus {
+  border-bottom: 1px solid #eeeeee !important;
+  box-shadow: 0 1px 0 0 #eeeeee !important;
+}
+
+/* valid color */
+
+.input-field input[type=text].valid {
+  border-bottom: 1px solid #eeeeee !important;
+  box-shadow: 0 1px 0 0 #eeeeee !important;
+}
+
+/* invalid color */
+
+.input-field input[type=text].invalid {
+  border-bottom: 1px solid #eeeeee !important;
+  box-shadow: 0 1px 0 0 #eeeeee !important;
+}
+
+/* icon prefix focus color */
+
+.input-field .prefix.active {
+  color: #eeeeee;
+}
+
+.no-border {
+  border: none !important;
 }

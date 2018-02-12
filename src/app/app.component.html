@@ -2,9 +2,9 @@
   <a class="btn-floating btn-small right waves-effect waves-light red" id="addSocket" ng-click="newTab();">
     <i class="material-icons">add</i>
   </a>
-  <ul class="tabs grey darken-3" id="tabs-sockets">
+  <ul class="tabs grey darken-4" id="tabs-sockets">
     <li class="tab col s3" *ngFor="let tab of tabsData; index as i; first as isFristTab">
-      <a href="#tab-{{i}}" [ngClass]="{'active':isFristTab}">
+      <a href="#tab-{{i}}" [ngClass]="{'active':isFristTab}" class="deep-purple-text text-darken-1">
         <span>{{tab.name || 'Socket ' + i}}</span>
         &nbsp;
         <i class='fa fa-edit'></i>
@@ -13,10 +13,89 @@
   </ul>
 </div>
 <div id="tab-{{i}}" class="col s12" *ngFor="let tab of tabsData; index as i">
-  <div class="row" style="margin-left: auto; margin-right: auto">
+  <div class="row">
     <div class="input-field col s4">
-      <input id="ws-{{i}}" type="text" name="ws-{{i}}" [(ngModel)]="tab.ws">
+      <input id="ws-{{i}}" type="text" name="ws-{{i}}" [(ngModel)]="tab.ws" class="white-text">
       <label for="ws-{{i}}">WS URL</label>
     </div>
+  </div>
+  <ul class="tabs grey darken-4" id="socket-{{i}}-tabs">
+    <li class="tab col s3">
+      <a href="#tab-{{i}}-options" class="deep-purple-text text-darken-1 active">Options</a>
+    </li>
+    <li class="tab col s3">
+      <a href="#tab-{{i}}-events" class="deep-purple-text text-darken-1">Events</a>
+    </li>
+    <li class="tab col s3">
+      <a href="#tab-{{i}}-emits" class="deep-purple-text text-darken-1">Emits</a>
+    </li>
+  </ul>
+  <div id="tab-{{i}}-options">
+    <ul class="collapsible no-border" style="box-shadow: none" id="options-{{i}}-collaps">
+      <li class="no-border">
+        <div class="collapsible-header no-border grey darken-2 grey-text text-lighten-3">Path</div>
+        <div class="collapsible-body no-border">
+          <div class="row">
+            <div class="input-field col s4">
+              <input [(ngModel)]="tab.options.path.value" name="path-{{i}}" id="path-{{i}}" type="text">
+              <label for="path-{{i}}" [ngClass]="{'active':tab.options.path.value}">Path</label>
+            </div>
+            <div class="switch col s2 center-align">
+              <label>Active</label>
+              <br>
+              <label>
+                Off
+                <input type="checkbox" [(ngModel)]="tab.options.path.active" id="socket-{{i}}-path-{{i}}-active">
+                <span class="lever"></span>
+                On
+              </label>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="no-border">
+        <div class="collapsible-header no-border grey darken-2 grey-text text-lighten-3">
+          Querys <i class="material-icons right" (click)="addQuery(i)">add</i>
+        </div>
+        <div class="collapsible-body no-border">
+          <div class="row" *ngFor="let query of tab.options.querys; index as q">
+            <div class="input-field col s3">
+              <input [(ngModel)]="query.name" name="socket-{{i}}-query-{{q}}-name" id="socket-{{i}}-query-{{q}}-name" type="text">
+              <label for="socket-{{i}}-query-{{q}}-name" [ngClass]="{'active':query.name}">Name</label>
+            </div>
+            <div class="input-field col s3">
+              <input [(ngModel)]="query.value" name="socket-{{i}}-query-{{q}}-value" id="socket-{{i}}-query-{{q}}-value" type="text">
+              <label for="socket-{{i}}-query-{{q}}-value" [ngClass]="{'active':query.value}">Value</label>
+            </div>
+            <div class="switch col s2">
+              <label>Active</label>
+              <br>
+              <label>
+                Off
+                <input type="checkbox" [(ngModel)]="query.active" id="socket-{{i}}-query-{{q}}-active">
+                <span class="lever"></span>
+                On
+              </label>
+            </div>
+            <div class="col s1">
+              <a class="waves-effect waves-light btn green darken-1" (click)="saveQuery(i, q)">
+                <i class="material-icons">save</i>
+              </a>
+            </div>
+            <div class="col s1">
+              <a class="waves-effect waves-light btn red darken-1" (click)="deleteQuery(i, q)">
+                <i class="material-icons">delete</i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="tab-{{i}}-events">
+    events
+  </div>
+  <div id="tab-{{i}}-emits">
+    emits
   </div>
 </div>

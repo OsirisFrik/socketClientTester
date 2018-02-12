@@ -13,7 +13,10 @@ export class StorageService {
           {
             name: null,
             options: {
-              path: null,
+              path: {
+                value: null,
+                active: false
+              },
               querys: []
             },
             ws: null,
@@ -28,6 +31,13 @@ export class StorageService {
     }
 
     return data.tabs
+  }
+
+  saveData(data: any[]) {
+    let tabs = {
+      tabs: data
+    }
+    localStorage.setItem('tabsData', JSON.stringify(tabs))
   }
 
 }
