@@ -3,7 +3,7 @@ import { ElectronAppService } from "./services/electron-sv.service";
 import { StorageService } from "./services/storage.service";
 import * as M from "materialize-css";
 import * as hljs from "highlight.js";
-var ace = require('assets/ace-builds/src-noconflict/ace.js')
+var ace = require('assets/ace/src-noconflict/ace.js')
 
 hljs.configure({ useBR: true })
 
