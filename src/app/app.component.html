@@ -99,7 +99,7 @@
               </a>
             </div>
             <div class="col s1">
-              <a class="waves-effect waves-light btn green darken-1" (click)="deleteQuery(i, q)">
+              <a class="waves-effect waves-light btn red darken-1" (click)="deleteQuery(i, q)">
                 <i class="material-icons">delete</i>
               </a>
             </div>
@@ -111,22 +111,23 @@
   <div id="tab-{{i}}-events">
     <div class="row">
       <div class="col s6">
+        <br>
         <div class="row" *ngFor="let event of tab.events; index as e">
           <div class="input-field col s6">
             <input [(ngModel)]="event.name" name="socket-{{i}}-event-{{e}}-name" id="socket-{{i}}-event-{{e}}-name" type="text">
             <label for="socket-{{i}}-event-{{e}}-name" [ngClass]="{'active':event.name}">Name</label>
           </div>
-          <div class="col s2 center">
+          <div class="col s2 center ajust-top-15">
             <a class="waves-effect waves-light btn" (click)="viewEvent(i, e)">
               <i class="material-icons">visibility</i>
             </a>
           </div>
-          <div class="col s2 center">
+          <div class="col s2 center ajust-top-15">
             <a class="waves-effect waves-light btn green darken-1" (click)="saveEvent(i, e)">
               <i class="material-icons">save</i>
             </a>
           </div>
-          <div class="col s2 center">
+          <div class="col s2 center ajust-top-15">
             <a class="waves-effect waves-light btn red darken-1" (click)="deleteEvent(i, e)">
               <i class="material-icons">delete</i>
             </a>
@@ -139,16 +140,50 @@
         </div>
       </div>
       <div class="col s6">
-        <pre>
-          <code class="json" id="socket-{{i}}-code">
-            null
-          </code>
-        </pre>
+        <div class="editor" id="socket-{{i}}-event-data"></div>
       </div>
     </div>
   </div>
   <div id="tab-{{i}}-emits">
-    emits
+    <div class="row">
+      <div class="col s6">
+        <br>
+        <div class="row" *ngFor="let emit of tab.emits; index as em">
+          <div class="input-field col s5">
+            <input [(ngModel)]="emit.name" name="socket-{{i}}-emit-{{em}}-name" id="socket-{{i}}-emit-{{em}}-name" type="text">
+            <label for="socket-{{i}}-emit-{{em}}-name" [ngClass]="{'active':emit.name}">Name</label>
+          </div>
+          <div class="col s2 center ajust-top-15">
+            <a class="waves-effect waves-light btn" (click)="editEmit(i, em)">
+              <i class="material-icons">edit</i>
+            </a>
+          </div>
+          <div class="col s2 center ajust-top-15">
+            <a class="waves-effect waves-light btn" (click)="sendEmit(i, em)">
+              <i class="material-icons">send</i>
+            </a>
+          </div>
+          <div class="col s2 center ajust-top-15">
+            <a class="waves-effect waves-light btn green darken-1" (click)="saveEmit(i, em)">
+              <i class="material-icons">save</i>
+            </a>
+          </div>
+          <div class="col s2 center ajust-top-15">
+            <a class="waves-effect waves-light btn red darken-1" (click)="deleteEmit(i, em)">
+              <i class="material-icons">delete</i>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <a class="waves-effect waves-light btn green darken-1 right" (click)="addEmit(i)">
+            <i class="material-icons">add</i>
+          </a>
+        </div>
+      </div>
+      <div class="col s6">
+        <div class="editor" id="socket-{{i}}-emit-data"></div>
+      </div>
+    </div>
   </div>
   <div class="row footer">
     <div class="col s12">

@@ -39,6 +39,7 @@ export class SocketsService {
     socket.on('disconnect', d => {
       console.log('Socket disconnected', d)
       this.socketStatus(i, false)
+      this.globals.tabs[i].socket = null
       this._toast.error('Socket disconnected')
     })
 
@@ -66,9 +67,6 @@ export class SocketsService {
 
   disconnect(socket, i: number) {
     socket.close()
-    this.socketStatus(i, false)
-    this._toast.error('Socket disconnected')
-    this.globals.tabs[i].socket = null
   }
 
   listenEvent(socket, i: number, ie?: number) {
@@ -79,7 +77,7 @@ export class SocketsService {
         tabs.events[ie].responses.push(data)
         console.log(tabs.events[ie].name, data)
         if (tabs.viewEvent === ie && tabs.block !== null) {
-          tabs.block.innerHTML = hljs.highlightAuto(JSON.stringify(tabs.events[ie].responses)).value
+          tabs.block.setValue(JSON.stringify(tabs.events[ie].responses))
         }
       })
     } else {
@@ -89,11 +87,16 @@ export class SocketsService {
           tabs.events[e].responses.push(data)
           console.log(tabs.events[e].name, data)
           if (tabs.viewEvent === e && tabs.block !== null) {
-            tabs.block.innerHTML = hljs.highlightAuto(JSON.stringify(tabs.events[e].responses)).value
+            tabs.block.setValue(JSON.stringify(tabs.events[e].responses))
           }
         })
       }
     }
+  }
+
+  emit(socket, i: number, event: string, data: any) {
+    socket.emit(event, data)
+    this._toast.success(`${event} send`)
   }
 
   private subscribeMessage(socket, ev): Observable<any> {

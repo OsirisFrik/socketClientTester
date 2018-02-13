@@ -7,4 +7,15 @@ export class GlobalsService {
 
   public tabs: any[] = []
 
+  public jsonStructure(data) {
+    let newData = data.replace(/\[{/g, '[\n {')
+    newData = newData.replace(/}]/g, '} \n]')
+    newData = newData.replace(/{/g, '{\n    ')
+    newData = newData.replace(/}/g, '\n  }')
+    newData = newData.replace(/},/g, '},\n  ')
+    newData = newData.replace(/,"/g, ',\n "')
+
+    return newData
+  }
+
 }
