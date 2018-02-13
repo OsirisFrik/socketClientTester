@@ -18,6 +18,22 @@
       <input id="ws-{{i}}" type="text" name="ws-{{i}}" [(ngModel)]="tab.ws" class="white-text">
       <label for="ws-{{i}}">WS URL</label>
     </div>
+    <div class="col s2 ajust-top-15">
+      <a class="waves-effect waves-light btn green darken-1" (click)="connectSocket(i)">
+        <span *ngIf="!tab.socketStatus">
+          Connect
+        </span>
+        <span *ngIf="tab.socketStatus">
+          Reconnect
+        </span>
+      </a>
+    </div>
+    <div class="col s2 ajust-top-15">
+      <a class="waves-effect waves-light btn red darken-1" [ngClass]="{'disabled': !tab.socketStatus && tab.socket === null}" (click)="disconnectSocket(i)">
+        Disconnect
+      </a>
+    </div>
+    <div class="col s3"></div>
   </div>
   <ul class="tabs grey darken-4" id="socket-{{i}}-tabs">
     <li class="tab col s3">
@@ -53,7 +69,7 @@
           </div>
         </div>
       </li>
-      <li class="no-border">
+      <li class="no-border" [ngClass]="{'active':tab.options.querys.length > 0}">
         <div class="collapsible-header no-border grey darken-2 grey-text text-lighten-3">
           Querys <i class="material-icons right" (click)="addQuery(i)">add</i>
         </div>
@@ -83,7 +99,7 @@
               </a>
             </div>
             <div class="col s1">
-              <a class="waves-effect waves-light btn red darken-1" (click)="deleteQuery(i, q)">
+              <a class="waves-effect waves-light btn green darken-1" (click)="deleteQuery(i, q)">
                 <i class="material-icons">delete</i>
               </a>
             </div>
@@ -93,9 +109,62 @@
     </ul>
   </div>
   <div id="tab-{{i}}-events">
-    events
+    <div class="row">
+      <div class="col s6">
+        <div class="row" *ngFor="let event of tab.events; index as e">
+          <div class="input-field col s6">
+            <input [(ngModel)]="event.name" name="socket-{{i}}-event-{{e}}-name" id="socket-{{i}}-event-{{e}}-name" type="text">
+            <label for="socket-{{i}}-event-{{e}}-name" [ngClass]="{'active':event.name}">Name</label>
+          </div>
+          <div class="col s2 center">
+            <a class="waves-effect waves-light btn" (click)="viewEvent(i, e)">
+              <i class="material-icons">visibility</i>
+            </a>
+          </div>
+          <div class="col s2 center">
+            <a class="waves-effect waves-light btn green darken-1" (click)="saveEvent(i, e)">
+              <i class="material-icons">save</i>
+            </a>
+          </div>
+          <div class="col s2 center">
+            <a class="waves-effect waves-light btn red darken-1" (click)="deleteEvent(i, e)">
+              <i class="material-icons">delete</i>
+            </a>
+          </div>
+        </div>
+        <div class="row">
+          <a class="waves-effect waves-light btn green darken-1 right" (click)="addEvent(i)">
+            <i class="material-icons">add</i>
+          </a>
+        </div>
+      </div>
+      <div class="col s6">
+        <pre>
+          <code class="json" id="socket-{{i}}-code">
+            null
+          </code>
+        </pre>
+      </div>
+    </div>
   </div>
   <div id="tab-{{i}}-emits">
     emits
+  </div>
+  <div class="row footer">
+    <div class="col s12">
+      <div class="col s1">
+        <i class='fa fa-terminal'></i>
+      </div>
+      <div class="col s2 push-s9">
+        <span class="badge grey-text text-lighten-5" id="socket-{{i}}-status" [ngClass]="{'red': !tab.socketStatus, 'green': tab.socketStatus}">
+          <span *ngIf="tab.socketStatus">
+            Socket connected
+          </span>
+          <span *ngIf="!tab.socketStatus">
+            Socket offline
+          </span>
+        </span>
+      </div>
+    </div>
   </div>
 </div>

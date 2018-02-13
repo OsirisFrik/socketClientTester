@@ -5,6 +5,8 @@ import { NgxElectronModule } from 'ngx-electron';
 
 import { AppComponent } from './app.component';
 
+import { GlobalsService } from "./services/globals.service";
+import { ToastService } from "./services/toast.service";
 
 @NgModule({
   declarations: [
@@ -15,7 +17,10 @@ import { AppComponent } from './app.component';
     NgxElectronModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    GlobalsService,
+    ToastService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

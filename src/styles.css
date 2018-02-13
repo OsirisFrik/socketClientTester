@@ -66,3 +66,15 @@
 .no-border {
   border: none !important;
 }
+
+.ajust-top-15 {
+  margin-top: 15px !important;
+}
+
+.footer {
+  width: 100% !important;
+  position: fixed !important;
+  bottom: 0;
+  margin: 0;
+  background-color: gray;
+}
