@@ -7,7 +7,7 @@ export class ToastService {
   constructor() { }
 
   clasic(message: string, time?: number, callback?: any, styles?: string) {
-    return new M.Toast({html: message, displayLength: time || 4000, completeCallback: callback || null, classes: styles})
+    return new M.Toast({html: message, displayLength: time || 3000, completeCallback: callback || null})
   }
 
   success(message: string, time?: number, callback?: any) {

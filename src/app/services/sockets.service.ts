@@ -12,7 +12,7 @@ export class SocketsService {
   constructor(
     public globals: GlobalsService,
     private _toast: ToastService
-  ) { }
+  ) {}
 
   socketStatus(i: number, value: boolean) {
     this.globals.tabs[i].socketStatus = value
@@ -67,31 +67,56 @@ export class SocketsService {
 
   disconnect(socket, i: number) {
     socket.close()
+    this.globals.tabs[i].socket = null
   }
 
   listenEvent(socket, i: number, ie?: number) {
     let tabs = this.globals.tabs[i]
+    let toast = this._toast
+    if (typeof this.globals.events[i] === 'undefined') {
+      this.globals.events[i] = []
+    }
     if (typeof ie !== 'undefined' && ie !== null) {
       console.log(tabs.events[ie])
-      this.subscribeMessage(socket, tabs.events[ie].name).subscribe(data => {
+      this.globals.events[i][ie] = this.subscribeMessage(socket, tabs.events[ie].name).subscribe(data => {
         tabs.events[ie].responses.push(data)
-        console.log(tabs.events[ie].name, data)
+        if (tabs.events[ie].settings.notification) {
+          toast.clasic(`Event ${tabs.events[ie].name} received`)
+        }
         if (tabs.viewEvent === ie && tabs.block !== null) {
-          tabs.block.setValue(JSON.stringify(tabs.events[ie].responses))
+          if (tabs.events[ie].settings.allResponses) {
+            tabs.block.setValue(JSON.stringify(tabs.events[ie].responses))
+          } else {
+            tabs.block.setValue(JSON.stringify(tabs.events[ie].responses.pop()))
+          }
         }
       })
     } else {
       for (let e = 0; e < tabs.events.length; e++) {
         console.log(tabs.events[e])
-        this.subscribeMessage(socket, tabs.events[e].name).subscribe(data => {
+        this.globals.events[i][e] = this.subscribeMessage(socket, tabs.events[e].name).subscribe(data => {
           tabs.events[e].responses.push(data)
-          console.log(tabs.events[e].name, data)
+          if (tabs.events[e].settings.notification) {
+            toast.clasic(`Event ${tabs.events[e].name} received`)
+          }
           if (tabs.viewEvent === e && tabs.block !== null) {
-            tabs.block.setValue(JSON.stringify(tabs.events[e].responses))
+            if (tabs.events[e].settings.allResponses) {
+              tabs.block.setValue(JSON.stringify(tabs.events[e].responses))
+            } else {
+              tabs.block.setValue(JSON.stringify(tabs.events[e].responses.pop()))
+            }
           }
         })
       }
     }
+  }
+
+  exitEvent(socket, i: number, ie: number) {
+    this.globals.events[i][ie].unsubscribe()
+    this.globals.events[i].splice(ie, 1)
+    socket.removeListener(this.globals.tabs[i].events[ie].name, data => {
+      this._toast.clasic(`${this.globals.tabs[i].events[ie].name} event exit`)
+    })
   }
 
   emit(socket, i: number, event: string, data: any) {

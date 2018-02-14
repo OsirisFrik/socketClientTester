@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, Menu } from "electron";
 import * as path from "path";
 import * as url from "url";
 import * as storage from "electron-json-storage";
@@ -20,6 +20,9 @@ for (let i = 0; i < commands.length; i++) {
 let win
 
 function initApp() {
+  // if (mode == 'prod') {
+  //   Menu.setApplicationMenu(Menu.buildFromTemplate(tem));
+  // }
   createWindow()
 }
 
@@ -27,7 +30,7 @@ function createWindow() {
   const iconName = process.platform === 'win32' ? 'icons/win/icon.icon' : 'icons/png/64x64.png'
   const iconPath = path.join(__dirname, iconName)
   win = new BrowserWindow({ width: 1090, height: 800, icon: iconPath, darkTheme: true })
-  setTimeout(function () {
+  setTimeout(function() {
     win.loadURL(url.format({
       pathname: path.join(__dirname, 'dist/index.html'),
       protocol: 'file',

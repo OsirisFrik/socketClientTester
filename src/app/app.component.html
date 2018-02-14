@@ -113,7 +113,7 @@
       <div class="col s6">
         <br>
         <div class="row" *ngFor="let event of tab.events; index as e">
-          <div class="input-field col s6">
+          <div class="input-field col s5">
             <input [(ngModel)]="event.name" name="socket-{{i}}-event-{{e}}-name" id="socket-{{i}}-event-{{e}}-name" type="text">
             <label for="socket-{{i}}-event-{{e}}-name" [ngClass]="{'active':event.name}">Name</label>
           </div>
@@ -130,6 +130,11 @@
           <div class="col s2 center ajust-top-15">
             <a class="waves-effect waves-light btn red darken-1" (click)="deleteEvent(i, e)">
               <i class="material-icons">delete</i>
+            </a>
+          </div>
+          <div class="col s1 center ajust-top-20">
+            <a class='waves-effect waves-light modal-trigger grey-text' data-target="modal-event-settings" (click)="openModal(i, e)">
+              <i class="material-icons">more_vert</i>
             </a>
           </div>
         </div>
@@ -201,5 +206,34 @@
         </span>
       </div>
     </div>
+  </div>
+</div>
+<div id="modal-event-settings" class="modal grey darken-3">
+  <div class="modal-content">
+    <div class="row" *ngIf="modalSettings">
+      <div class="col s6 center switch">
+        <label>Notification</label>
+        <br>
+        <label>
+          Off
+          <input type="checkbox" [(ngModel)]="modalSettings.settings.notification" id="socket-{{i}}-event-{{modalSettings.indexEvent}}-notification">
+          <span class="lever"></span>
+          On
+        </label>
+      </div>
+      <div class="col s6 center switch">
+        <label>All responses</label>
+        <br>
+        <label>
+          Off
+          <input type="checkbox" [(ngModel)]="modalSettings.settings.allResponses" id="socket-{{i}}-event-{{modalSettings.indexEvent}}-responses">
+          <span class="lever"></span>
+          On
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer grey darken-4">
+    <a class="modal-action modal-close waves-effect waves-green btn-flat grey-text text-lighten-3" (click)="closeModal()">SAVE</a>
   </div>
 </div>

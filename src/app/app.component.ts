@@ -3,7 +3,7 @@ import { ElectronAppService } from "./services/electron-sv.service";
 import { StorageService } from "./services/storage.service";
 import { SocketsService } from "./services/sockets.service";
 import { GlobalsService } from "./services/globals.service";
-import {ToastService} from "./services/toast.service";
+import { ToastService } from "./services/toast.service";
 import * as M from "materialize-css";
 import * as hljs from "highlight.js";
 var ace = require('assets/ace/src-noconflict/ace.js')
@@ -24,8 +24,8 @@ export class AppComponent {
 
   public tabsData: any[] = []
   public tabs: any
-  public testCode: any
   public editor: any
+  public modalSettings: any = false
 
   constructor(
     private _electron: ElectronAppService,
@@ -37,6 +37,7 @@ export class AppComponent {
     this.tabs = setTimeout(function() {
       edit = this.ace
       beautify = edit.require('ace/ext/beautify')
+      new M.Modal(document.getElementById('modal-event-settings'))
       return new M.Tabs(document.getElementById('tabs-sockets'))
     })
     data = this._storage.getData()
@@ -66,13 +67,12 @@ export class AppComponent {
 
       if (data[i].events.length > 0) {
         for (let j = 0; j < data[i].events.length; j++) {
-          tabData.events.push({ name: data[i].events[j], responses: [] })
+          tabData.events.push({ name: data[i].events[j].name, settings: data[i].events[j].settings, responses: [] })
         }
       }
 
       this.globals.tabs.push(tabData)
     }
-    this.testCode = 'sdad\nasda'
     this.tabsData = this.globals.tabs
   }
 
@@ -136,12 +136,17 @@ export class AppComponent {
   addEvent(indexTab: number) {
     let newEvent = {
       name: null,
+      settings: {
+        allResponses: false,
+        notification: false,
+        callback: null
+      },
       responses: []
     }
 
     this.tabsData[indexTab].events.push(newEvent)
     for (let i = 0; i < this.tabsData[indexTab].events.length; i++) {
-      data[indexTab].events[i] = this.tabsData[indexTab].events[i].name
+      data[indexTab].events[i] = { name: this.tabsData[indexTab].events[i].name, settings: this.tabsData[indexTab].events[i].settings }
     }
     this.saveData(indexTab)
   }
@@ -164,7 +169,11 @@ export class AppComponent {
 
     let data = this.tabsData[indexTab].events[indexEvent].responses
     if (typeof data === 'object') {
-      data = JSON.stringify(data)
+      if (this.tabsData[indexTab].events[indexEvent].settings.allResponses) {
+        data = JSON.stringify(data)
+      } else {
+        data = JSON.stringify(data.pop())
+      }
       this.tabsData[indexTab].block.session.setMode("ace/mode/json");
     }
     this.tabsData[indexTab].block.setValue(data)
@@ -175,7 +184,10 @@ export class AppComponent {
   }
 
   saveEvent(indexTab: number, indexEvent: number) {
-    data[indexTab].events[indexEvent] = this.tabsData[indexTab].events[indexEvent].name
+    data[indexTab].events[indexEvent] = {
+      name: this.tabsData[indexTab].events[indexEvent].name,
+      settings: this.tabsData[indexTab].events[indexEvent].settings
+    }
     if (this.tabsData[indexTab].socket !== null) {
       this._socket.listenEvent(this.tabsData[indexTab].socket, indexTab, indexEvent)
     }
@@ -183,6 +195,9 @@ export class AppComponent {
   }
 
   deleteEvent(indexTab: number, indexEvent: number) {
+    if (this.tabsData[indexTab].socket !== null) {
+      this._socket.exitEvent(this.tabsData[indexTab].socket, indexTab, indexEvent)
+    }
     this.tabsData[indexTab].events.splice(indexEvent, 1)
     data[indexTab].events.splice(indexEvent, 1)
     if (this.tabsData[indexTab].viewEvent === indexEvent) {
@@ -190,11 +205,6 @@ export class AppComponent {
       this.tabsData[indexTab].viewEvent = null
     }
     this.saveData(indexTab)
-    try {
-
-    } catch (e) {
-
-    }
   }
 
   addEmit(indexTab: number) {
@@ -265,6 +275,26 @@ export class AppComponent {
     } else {
       this._toast.warning('Please connect the socket first')
     }
+  }
+
+  openModal(indexTab: number, indexEvent: number) {
+    this.modalSettings = {
+      settings: this.tabsData[indexTab].events[indexEvent].settings,
+      indexTab: indexTab,
+      indexEvent: indexEvent
+    }
+  }
+
+  closeModal() {
+    let edit = this.modalSettings
+    this.tabsData[edit.indexTab].events[edit.indexEvent].settings = edit.settings
+    if (this.tabsData[edit.indexTab].block !== null && this.tabsData[edit.indexTab].viewEvent === edit.indexEvent && !edit.settings.allResponses) {
+      this.tabsData[edit.indexTab].block.setValue(JSON.stringify(this.tabsData[edit.indexTab].events[edit.indexEvent].responses.pop()))
+    } else if (this.tabsData[edit.indexTab].block !== null && this.tabsData[edit.indexTab].viewEvent === edit.indexEvent && edit.settings.allResponses) {
+      this.tabsData[edit.indexTab].block.setValue(JSON.stringify(this.tabsData[edit.indexTab].events[edit.indexEvent].responses))
+    }
+    this.saveData(edit.indexTab)
+    this.modalSettings = false
   }
 
 }
