@@ -8,8 +8,8 @@
 /releases
 
 # dependencies
-/node_modules
-!./node_modules/@types/materialize-css/*
+node_modules/*
+!node_modules/@types/
 
 # IDEs and editors
 /.idea
